@@ -5,6 +5,11 @@ const nom = document.getElementById('nom');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
+const listePersonnes = document.getElementById('liste-personnes');
+
+
+// Tableau pour stocker les informations des personnes
+const personnes = [];
 
 // Ajout d'un écouteur d'événement pour la soumission du formulaire
 form.addEventListener('submit', e => {
@@ -49,6 +54,15 @@ const resetFormFields = () => {
     password2.value = '';
 };
 
+// Fonction pour afficher la liste des personnes inscrites
+const afficherPersonnes = () => {
+    listePersonnes.innerHTML = ''; // Vide la liste avant de la remplir à nouveau
+    personnes.forEach(personne => {
+        const li = document.createElement('li'); // Crée un nouvel élément de liste
+        li.textContent = `${personne.prenom} ${personne.nom} - ${personne.email}`; // Ajoute le texte avec les informations de la personne
+        listePersonnes.appendChild(li); // Ajoute l'élément de liste à la liste
+    });
+};
 // Fonction pour valider les entrées du formulaire
 const validateInputs = () => {
     const valeurPrenom = prenom.value.trim(); // Récupère la valeur du prénom et supprime les espaces autour
@@ -113,10 +127,19 @@ const validateInputs = () => {
     } else {
         setSuccess(password2); // Affiche un succès si les mots de passe correspondent
     }
-
-    // Si toutes les validations sont correctes, affiche un message de succès et réinitialise les champs du formulaire
     if (isValid) {
+        // Ajoute les informations de la personne au tableau
+        personnes.push({
+            prenom: valeurPrenom,
+            nom: valeurNom,
+            email: valeurEmail
+        });
+
         form.innerHTML = '<h1>Succès : Le formulaire a été bien soumis.</h1>'; // Remplace le formulaire par un message de succès
+
+        afficherPersonnes(); // Appelle la fonction pour afficher la liste des personnes
         resetFormFields(); // Réinitialise les champs du formulaire
     }
+
+     
 };
