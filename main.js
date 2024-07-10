@@ -6,10 +6,13 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
 const listePersonnes = document.getElementById('liste-personnes');
+const messageDiv = document.getElementById('message'); // Élément pour afficher le message de succès
+
 
 
 // Tableau pour stocker les informations des personnes
 const personnes = [];
+
 
 // Ajout d'un écouteur d'événement pour la soumission du formulaire
 form.addEventListener('submit', e => {
@@ -63,6 +66,15 @@ const afficherPersonnes = () => {
         listePersonnes.appendChild(li); // Ajoute l'élément de liste à la liste
     });
 };
+
+// Fonction pour afficher un message de succès temporaire
+const afficherMessageSucces = () => {
+    messageDiv.innerText = 'Formulaire soumis avec succès !'; // Affiche le message de succès
+    setTimeout(() => {
+        messageDiv.innerText = ''; // Réinitialise le message après 3 secondes
+    }, 3000);
+};
+
 // Fonction pour valider les entrées du formulaire
 const validateInputs = () => {
     const valeurPrenom = prenom.value.trim(); // Récupère la valeur du prénom et supprime les espaces autour
@@ -135,10 +147,11 @@ const validateInputs = () => {
             email: valeurEmail
         });
 
-        form.innerHTML = '<h1>Succès : Le formulaire a été bien soumis.</h1>'; // Remplace le formulaire par un message de succès
+        // form.innerHTML = '<h1>Succès : Le formulaire a été bien soumis.</h1>'; // Remplace le formulaire par un message de succès
 
         afficherPersonnes(); // Appelle la fonction pour afficher la liste des personnes
         resetFormFields(); // Réinitialise les champs du formulaire
+        afficherMessageSucces(); // Affiche le message de succès
     }
 
      
