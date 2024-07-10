@@ -6,14 +6,10 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
 
-
 // Ajout d'un écouteur d'événement pour la soumission du formulaire
 form.addEventListener('submit', e => {
     e.preventDefault(); // Empêche la soumission par défaut du formulaire
-    if (validateInputs()) { // Si les validations sont correctes, soumet le formulaire
-        form.innerHTML = '<p>Succès : Le formulaire a été bien soumis.</p>'; // Remplace le formulaire par un message de succès
-        localStorage.setItem('formSubmitted', 'true'); // Enregistre l'état de la soumission du formulaire
-    }
+    validateInputs(); // Appelle la fonction pour valider les entrées du formulaire
 });
 
 // Fonction pour afficher un message d'erreur
@@ -36,13 +32,21 @@ const setSuccess = element => {
     inputControl.classList.remove('error'); // Supprime la classe 'error' si elle est présente
 };
 
-
 // Fonction pour valider l'email
 const isValidEmail = email => {
     // Expression régulière pour valider l'email
     const re = /^(([^<>()\[\]\.,;:\s@"]+(\.[^<>()\[\]\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
 
     return re.test(String(email).toLowerCase());
+};
+
+// Fonction pour réinitialiser les champs du formulaire
+const resetFormFields = () => {
+    prenom.value = '';
+    nom.value = '';
+    email.value = '';
+    password.value = '';
+    password2.value = '';
 };
 
 // Fonction pour valider les entrées du formulaire
@@ -53,7 +57,6 @@ const validateInputs = () => {
     const valeurPassword = password.value.trim(); // Récupère la valeur du mot de passe et supprime les espaces autour
     const valeurPassword2 = password2.value.trim(); // Récupère la valeur du mot de passe de confirmation et supprime les espaces autour
 
-    
     let isValid = true;
 
     // Validation du prénom
@@ -111,8 +114,9 @@ const validateInputs = () => {
         setSuccess(password2); // Affiche un succès si les mots de passe correspondent
     }
 
-    // Si toutes les validations sont correctes, affiche un message de succès
+    // Si toutes les validations sont correctes, affiche un message de succès et réinitialise les champs du formulaire
     if (isValid) {
         form.innerHTML = '<h1>Succès : Le formulaire a été bien soumis.</h1>'; // Remplace le formulaire par un message de succès
+        resetFormFields(); // Réinitialise les champs du formulaire
     }
 };
