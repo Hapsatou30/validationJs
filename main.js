@@ -99,6 +99,9 @@ const afficherPersonnes = () => {
     console.log(personnesJSON); // Vous pouvez utiliser cette chaîne JSON comme nécessaire
 };
 
+// Appel initial pour afficher les personnes inscrites
+afficherPersonnes();
+
 // Fonction pour afficher un message de succès temporaire
 const afficherMessageSucces = () => {
     messageDiv.innerText = 'Formulaire soumis avec succès !'; // Affiche le message de succès
