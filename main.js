@@ -1,4 +1,3 @@
-
 // Déclaration des variables : Récupération des éléments du DOM
 const form = document.getElementById('form');
 const prenom = document.getElementById('prenom');
@@ -6,10 +5,14 @@ const nom = document.getElementById('nom');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
-const listePersonnes = document.getElementById('liste-personnes');
-const messageDiv = document.getElementById('message'); 
-const submitButton = document.getElementById('submit-button'); 
-const personnes = []; // Tableau pour stocker les informations des personnes
+const tablePersonnes = document.getElementById('table-personnes');
+const messageDiv = document.getElementById('message');
+const submitButton = document.getElementById('submit-button');
+let personnes = []; // Tableau pour stocker les informations des personnes, initialisé vide
+
+// Récupérer les données depuis localStorage au chargement de la page
+const personnesFromStorage = JSON.parse(localStorage.getItem('personnes')) || [];
+personnes = personnesFromStorage; // Mettre à jour le tableau personnes avec les données récupérées
 
 // Ajout d'un écouteur d'événement pour la soumission du formulaire
 form.addEventListener('submit', e => {
@@ -56,32 +59,44 @@ const resetFormFields = () => {
     email.value = '';
     password.value = '';
     password2.value = '';
-      // Masquer tous les champs sauf le premier
-      nom.parentElement.style.display = 'none';
-      email.parentElement.style.display = 'none';
-      password.parentElement.style.display = 'none';
-      password2.parentElement.style.display = 'none';
 
-      // Réinitialiser les classes de succès/erreur
+    // Masquer tous les champs sauf le premier
+    nom.parentElement.style.display = 'none';
+    email.parentElement.style.display = 'none';
+    password.parentElement.style.display = 'none';
+    password2.parentElement.style.display = 'none';
+
+    // Réinitialiser les classes de succès/erreur
     prenom.parentElement.classList.remove('success', 'error');
     nom.parentElement.classList.remove('success', 'error');
     email.parentElement.classList.remove('success', 'error');
     password.parentElement.classList.remove('success', 'error');
     password2.parentElement.classList.remove('success', 'error');
-    
-    submitButton.disabled = true; // Désactive le bouton de soumission après réinitialisation
 
- 
+    submitButton.disabled = true; // Désactive le bouton de soumission après réinitialisation
 };
 
-// Fonction pour afficher la liste des personnes inscrites
+
+// Fonction pour afficher la liste des personnes inscrites sous forme de table
 const afficherPersonnes = () => {
-    listePersonnes.innerHTML = ''; // Vide la liste avant de la remplir à nouveau
+    tablePersonnes.innerHTML = ''; // Vide la table avant de la remplir à nouveau
     personnes.forEach(personne => {
-        const li = document.createElement('li'); // Crée un nouvel élément de liste
-        li.textContent = `${personne.prenom} ${personne.nom} - ${personne.email}`; // Ajoute le texte avec les informations de la personne
-        listePersonnes.appendChild(li); // Ajoute l'élément de liste à la liste
+        const row = tablePersonnes.insertRow(); // Insère une nouvelle ligne dans la table
+
+        // Insertion des cellules dans la ligne
+        const cellPrenom = row.insertCell();
+        const cellNom = row.insertCell();
+        const cellEmail = row.insertCell();
+
+        // Remplissage des cellules avec les informations de la personne
+        cellPrenom.textContent = personne.prenom;
+        cellNom.textContent = personne.nom;
+        cellEmail.textContent = personne.email;
     });
+
+    // Convertir le tableau personnes en JSON pour le stockage ou l'envoi
+    const personnesJSON = JSON.stringify(personnes);
+    console.log(personnesJSON); // Vous pouvez utiliser cette chaîne JSON comme nécessaire
 };
 
 // Fonction pour afficher un message de succès temporaire
@@ -142,8 +157,8 @@ password.addEventListener('input', function() {
     const valeurPassword = password.value.trim();
     if (valeurPassword === '') {
         setError(password, 'Le mot de passe est obligatoire'); // Affiche une erreur si le mot de passe est vide
-    } else if (valeurPassword.length < 8) {
-        setError(password, 'Le mot de passe doit contenir au moins 8 caractères'); // Affiche une erreur si le mot de passe est trop court
+    } else if (valeurPassword.length < 6) {
+        setError(password, 'Le mot de passe doit contenir au moins 6 caractères'); // Affiche une erreur si le mot de passe est trop court
     } else {
         setSuccess(password); // Affiche un succès si le mot de passe est valide
 
@@ -226,7 +241,7 @@ const validateInputs = () => {
             isValid = false;
         }
     }
-    updateSubmitButton(); 
+
     // Si toutes les validations sont réussies, ajouter la personne à la liste
     if (isValid) {
         const personne = {
@@ -240,8 +255,12 @@ const validateInputs = () => {
         afficherPersonnes(); // Met à jour l'affichage de la liste des personnes inscrites
         resetFormFields(); // Réinitialise les champs du formulaire après soumission
         afficherMessageSucces(); // Affiche un message de succès temporaire
+
+        // Sauvegarder dans localStorage
+        localStorage.setItem('personnes', JSON.stringify(personnes));
     }
 };
+
 // Fonction pour mettre à jour l'état du bouton de soumission
 const updateSubmitButton = () => {
     const prenomValid = prenom.parentElement.classList.contains('success');
@@ -256,3 +275,5 @@ const updateSubmitButton = () => {
         submitButton.disabled = true; // Désactive le bouton de soumission si au moins une validation échoue
     }
 };
+
+
