@@ -21,6 +21,7 @@ body{
     color: white;
     border: none;
     border-radius: 8px;
+    font-size: 18px;
 }
 .input-control{
     display: flex;
@@ -49,6 +50,8 @@ body{
     height: 13px;
 }
 
-.hidden {
-    display: none;
+#submit-button:disabled {
+    background-color: #691e1e; 
+    cursor: not-allowed; /* Curseur non autorisé */
+    opacity: 0.6;
 }
